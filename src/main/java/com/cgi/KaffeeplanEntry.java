@@ -1,8 +1,7 @@
 package com.cgi;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -11,10 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class KaffeeplanEntry {
+@NoArgsConstructor
+@Getter
+@Setter
+public class KaffeeplanEntry extends PanacheEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "my_gen")
     @GenericGenerator(name = "my_gen",
