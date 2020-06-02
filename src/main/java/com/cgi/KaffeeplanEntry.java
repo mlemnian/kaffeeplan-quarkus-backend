@@ -1,6 +1,6 @@
 package com.cgi;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -12,14 +12,12 @@ import javax.persistence.Id;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class KaffeeplanEntry extends PanacheEntity {
+public class KaffeeplanEntry extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "my_gen")
     @GenericGenerator(name = "my_gen",
             strategy = "com.cgi.YearWeekSequenceGenerator")
-    String yearWeek;
-    String name;
-    String email;
+    public String yearWeek;
+    public String name;
+    public String email;
 }
