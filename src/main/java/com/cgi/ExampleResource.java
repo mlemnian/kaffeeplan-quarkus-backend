@@ -1,6 +1,5 @@
 package com.cgi;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
