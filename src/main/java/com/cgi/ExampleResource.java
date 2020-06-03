@@ -32,7 +32,7 @@ public class ExampleResource {
     @Transactional
     public KaffeeplanEntry addKaffeeplanEntry(KaffeeplanEntry kaffeeplanEntry) {
         kaffeeplanEntry.yearWeek = yearWeekSequenceGenerator.generate();
-        kaffeeplanEntry.delete();
+        kaffeeplanEntry.persist();
         logger.info(kaffeeplanEntry.toString());
         return kaffeeplanEntry;
     }
