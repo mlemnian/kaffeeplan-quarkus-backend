@@ -1,63 +1,32 @@
 package com.cgi;
 
-import lombok.SneakyThrows;
-import org.hibernate.HibernateException;
-import org.hibernate.MappingException;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.id.enhanced.SequenceStyleGenerator;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.type.LongType;
-import org.hibernate.type.Type;
+import javax.enterprise.context.ApplicationScoped;
+import javax.validation.constraints.NotNull;
 
-import java.io.Serializable;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Properties;
-import java.util.logging.Logger;
+import java.util.List;
+import java.util.Optional;
 
-public class YearWeekSequenceGenerator extends SequenceStyleGenerator {
+@ApplicationScoped
+public class YearWeekSequenceGenerator {
 
-    Logger logger = Logger.getLogger(YearWeekSequenceGenerator.class.getName());
-
-    Connection conn;
-
-    @Override
-    public Serializable generate(SharedSessionContractImplementor session,
-                                 Object objectToBePersisted) throws HibernateException {
+    public String generate() {
         long maxYearWeekY;
         long maxYearWeekW;
 
-        if (conn == null) {
-            return null;
-        }
+        Optional<@NotNull String> maxYearWeek;
 
-        String maxYearWeek = null;
+        List<KaffeeplanEntry> all = KaffeeplanEntry.listAll();
 
-        try {
-            CallableStatement stmt = conn.prepareCall(
-                    "select max(yearWeek) from KaffeeplanEntry;");
-            ResultSet rs = stmt.executeQuery();
-            logger.info(rs.toString());
-            while (rs.next()) {
-                maxYearWeek = rs.getString(1);
-                logger.info("RESULT: " + maxYearWeek);
-            }
-        } catch (SQLException e) {
-            // SQLException might occur if the DB table does not exist, yet.
-            // E.g., if the H2 DB has just been created.
-            logger.warning(e.getMessage());
-        }
+        maxYearWeek = all.stream().map(e -> e.yearWeek).max(String::compareTo);
 
-        if (maxYearWeek == null) {
+        if (maxYearWeek.isEmpty()) {
             int[] myw = getCurrentYearAndWeek();
             maxYearWeekY = myw[0];
             maxYearWeekW = myw[1];
         } else {
-            int myw = Integer.parseInt(maxYearWeek);
+            int myw = Integer.parseInt(maxYearWeek.get());
+
             maxYearWeekY = myw / 100;
             maxYearWeekW = myw % 100;
         }
@@ -69,16 +38,6 @@ public class YearWeekSequenceGenerator extends SequenceStyleGenerator {
         }
 
         return String.format("%04d%02d", maxYearWeekY, maxYearWeekW);
-    }
-
-    @SneakyThrows
-    @Override
-    public void configure(Type type, Properties params,
-                          ServiceRegistry serviceRegistry) throws MappingException {
-        super.configure(LongType.INSTANCE, params, serviceRegistry);
-        ConnectionProvider connProv = serviceRegistry.getService(ConnectionProvider.class);
-
-        conn = connProv.getConnection();
     }
 
     public static int[] getCurrentYearAndWeek() {
