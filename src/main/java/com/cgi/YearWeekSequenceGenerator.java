@@ -17,8 +17,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class YearWeekSequenceGenerator extends SequenceStyleGenerator {
+
+    Logger logger = Logger.getLogger(YearWeekSequenceGenerator.class.getName());
+
     Connection conn;
 
     @Override
@@ -35,15 +39,17 @@ public class YearWeekSequenceGenerator extends SequenceStyleGenerator {
 
         try {
             CallableStatement stmt = conn.prepareCall(
-                    "select max(year_Week) from Kaffeeplan_Entry;");
+                    "select max(yearWeek) from KaffeeplanEntry;");
             ResultSet rs = stmt.executeQuery();
+            logger.info(rs.toString());
             while (rs.next()) {
                 maxYearWeek = rs.getString(1);
-                System.out.println("RESULT: " + maxYearWeek);
+                logger.info("RESULT: " + maxYearWeek);
             }
         } catch (SQLException e) {
             // SQLException might occur if the DB table does not exist, yet.
             // E.g., if the H2 DB has just been created.
+            logger.warning(e.getMessage());
         }
 
         if (maxYearWeek == null) {
