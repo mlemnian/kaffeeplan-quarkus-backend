@@ -26,6 +26,7 @@ public class YearWeekSequenceGenerator {
             maxYearWeekW = myw[1];
         } else {
             int myw = Integer.parseInt(maxYearWeek.get());
+
             maxYearWeekY = myw / 100;
             maxYearWeekW = myw % 100;
         }
