@@ -10,13 +10,11 @@ import java.util.Optional;
 @ApplicationScoped
 public class YearWeekSequenceGenerator {
 
-    public String generate() {
+    public String generate(List<KaffeeplanEntry> all) {
         long maxYearWeekY;
         long maxYearWeekW;
 
         Optional<@NotNull String> maxYearWeek;
-
-        List<KaffeeplanEntry> all = KaffeeplanEntry.listAll();
 
         maxYearWeek = all.stream().map(e -> e.yearWeek).max(String::compareTo);
 

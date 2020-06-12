@@ -28,3 +28,24 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/kaffeeplan-backend-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image.
+
+
+## Endpoints
+### Application specific endpoints
+All application specific endpoints support `Content-Type: application/json` and `Content-Type: application/hal+json` headers.
+* GET http://localhost:8080/weeks
+* POST http://localhost:8080/weeks/
+* GET http://localhost:8080/weeks/{id}
+* PUT http://localhost:8080/weeks/{id}
+* DELETE http://localhost:8080/weeks/{id}
+
+### OpenAPI Specification:
+
+http://localhost:8080/openapi
+
+### Swagger-UI
+If you run this application in dev mode, the Swagger-UI is available under:
+
+http://localhost:8080/swagger-ui
+
+
